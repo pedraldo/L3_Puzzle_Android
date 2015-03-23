@@ -24,6 +24,8 @@ public class TwoPiecesPuzzle extends View {
     private Drawable mExampleDrawable;
     Bitmap myPict1 = BitmapFactory.decodeResource(getResources(), R.drawable.fishpiece1);
     Bitmap myPict2 = BitmapFactory.decodeResource(getResources(), R.drawable.fishpiece2);
+	
+	private int test;
 
 
     public TwoPiecesPuzzle(Context context) {
