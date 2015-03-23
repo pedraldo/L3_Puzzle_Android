@@ -17,6 +17,7 @@ import android.view.View;
 public class TwoPiecesPuzzle extends View {
 
     private int x1,y1,x2,y2;
+    private int fix1,fix2;
     private int tX, tY;
     private int dX, dY;
     private int imageTouched;
@@ -24,8 +25,6 @@ public class TwoPiecesPuzzle extends View {
     private Drawable mExampleDrawable;
     Bitmap myPict1 = BitmapFactory.decodeResource(getResources(), R.drawable.fishpiece1);
     Bitmap myPict2 = BitmapFactory.decodeResource(getResources(), R.drawable.fishpiece2);
-	
-	private int test;
 
 
     public TwoPiecesPuzzle(Context context) {
@@ -51,6 +50,7 @@ public class TwoPiecesPuzzle extends View {
         this.x2 = this.getLeft() + this.getWidth()/3;
         this.y2 = this.getTop() + this.getHeight() + 20 + this.myPict2.getHeight();
 
+
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -64,30 +64,28 @@ public class TwoPiecesPuzzle extends View {
                             imageTouched = 1;
                             dX = x1 - tX;
                             dY = y1 - tY;
-                            Log.d("testDown1", x1 + " " + y1);
                         }
 
                         if(tX <= x2+myPict2.getWidth() && tX >= x2 && tY <= y2+myPict2.getHeight() && tY >= y2){
                             imageTouched = 2;
                             dX = x2 - tX;
                             dY = y2 - tY;
-                            Log.d("testDown2", x1 + " " + y1);
 
                         }
                     break;
 
                     case MotionEvent.ACTION_MOVE:
-                        Log.d("testMove", x1 + " " + y1);
                         switch (imageTouched){
                             case 1:
                                 x1 = dX + (int)event.getX();
                                 y1 = dY + (int)event.getY();
-                                //Log.d("testMove", x1 + " " + y1);
+
                             break;
 
                             case 2:
                                 x2 = dX + (int)event.getX();
                                 y2 = dY + (int)event.getY();
+
                             break;
                         }
 
@@ -95,7 +93,20 @@ public class TwoPiecesPuzzle extends View {
                     break;
 
                     case MotionEvent.ACTION_UP:
+                        if(x1 + myPict1.getWidth() - x2 <= 20 && x1 + myPict1.getWidth() - x2 >= -20 && y1 - y2 <= 20 && y1 - y2 >= -20){
+                            switch(imageTouched){
+                                case 1:
+                                    x1 = x2 - myPict1.getWidth();
+                                    y1 = y2;
+                                break;
 
+                                case 2:
+                                    x2 = x1 + myPict1.getWidth();
+                                    y2 = y1;
+                                break;
+                            }
+                        }
+                        v.invalidate();
                     break;
                 }
                 return true;
