@@ -7,11 +7,13 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Random;
 
 
@@ -28,6 +30,10 @@ public class TwoPiecesPuzzle extends View {
     private boolean first = false;
 
     private Drawable mExampleDrawable;
+
+    private Puzzle puzzle;
+
+
     Bitmap myPict1 = BitmapFactory.decodeResource(getResources(), R.drawable.fishpiece1);
     Bitmap myPict2 = BitmapFactory.decodeResource(getResources(), R.drawable.fishpiece2);
 
@@ -52,26 +58,28 @@ public class TwoPiecesPuzzle extends View {
     }
 
     void init(){
-        int largeurMax = this.getWidth();
-        int hauteurMax = this.getHeight();
+        this.puzzle = new Puzzle(oiseauBleu,2,4,this.getWidth(),this.getHeight());
 
 
-        if(oiseauBleu.getWidth() > largeurMax){
-            float coeffLargeur = (float)((float)this.getWidth() / (float)oiseauBleu.getWidth());
-            Log.d("testLargeur", "getWidth : "+this.getWidth()+"   obWidth : "+oiseauBleu.getWidth()+"   coeff : "+coeffLargeur+"   multiplication : "+oiseauBleu.getHeight()*coeffLargeur);
-            oiseauBleu = Bitmap.createScaledBitmap(oiseauBleu, largeurMax, (int)((float)oiseauBleu.getHeight()*coeffLargeur), false);
-        }
+        this.setOnTouchListener(new OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                switch(event.getAction()){
+                    case MotionEvent.ACTION_DOWN:
 
-        if(oiseauBleu.getHeight() > hauteurMax){
-            float coeffHauteur = (float)((float)this.getHeight() / (float)oiseauBleu.getHeight());
-            oiseauBleu = Bitmap.createScaledBitmap(oiseauBleu,(int)((float)oiseauBleu.getHeight()*coeffHauteur),hauteurMax,false);
-        }
+                    break;
 
-        this.ListBitmap = decouperImage(oiseauBleu,3,4);
-        this.ListBitmapShuffle = ListBitmap.subList(0,ListBitmap.size()-1);
-        Collections.shuffle(ListBitmapShuffle, new Random());
+                    case MotionEvent.ACTION_MOVE:
 
+                    break;
 
+                    case MotionEvent.ACTION_UP:
+
+                    break;
+                }
+                return true;
+            }
+        });
 
 
 
@@ -144,29 +152,6 @@ public class TwoPiecesPuzzle extends View {
     */
     }
 
-    List<Bitmap> decouperImage(Bitmap b, int nbLigne, int nbColonne){
-        int largeur = b.getWidth();
-        int hauteur = b.getHeight();
-
-        Log.d("testGet","width : "+getWidth()+"    height : "+getHeight());
-
-        int largeur_piece = largeur/nbColonne;
-        int hauteur_piece = hauteur/nbLigne;
-
-        Log.d("testLG","largeur_piece : "+largeur_piece+"    hauteur_piece : "+hauteur_piece);
-
-        List<Bitmap> ListBitmap = new ArrayList<Bitmap>();
-
-        int i,j;
-        for(i=0; i<nbLigne;i++){
-            for(j=0;j<nbColonne;j++){
-                ListBitmap.add(b.createBitmap(b,j*largeur_piece,i*hauteur_piece,largeur_piece,hauteur_piece));
-            }
-        }
-
-        return ListBitmap;
-
-    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -178,15 +163,15 @@ public class TwoPiecesPuzzle extends View {
             this.first = true;
         }
 
-        //canvas.drawBitmap(myPict1, x1, y1, null);
-        //canvas.drawBitmap(myPict2, x2, y2, null);
-        int largeur_piece = this.ListBitmapShuffle.get(0).getWidth();
-        int hauteur_piece = this.ListBitmapShuffle.get(0).getHeight();
+        List<Piece> shuffleListPiece = this.puzzle.getShuffleListPiece();
+        Log.d("Test nb elmts","nb elements : "+shuffleListPiece.size());
+        int largeur_piece = shuffleListPiece.get(0).getBitmap().getWidth();
+        int hauteur_piece = shuffleListPiece.get(0).getBitmap().getHeight();
         int i;
         int x=0,y=0;
 
-        for(i=0;i<this.ListBitmapShuffle.size();i++){
-            canvas.drawBitmap(ListBitmapShuffle.get(i), x, y, null);
+        for(i=0;i<shuffleListPiece.size();i++){
+            canvas.drawBitmap(shuffleListPiece.get(i).getBitmap(), x, y, null);
             x += largeur_piece;
             if(x + largeur_piece > this.getWidth()){
                 x=0;
