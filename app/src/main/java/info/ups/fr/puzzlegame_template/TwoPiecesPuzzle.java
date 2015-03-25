@@ -28,6 +28,7 @@ public class TwoPiecesPuzzle extends View {
     private int dX, dY;
     private int imageTouched;
     private boolean first = false;
+    private boolean isPieceTouched;
     private int numPiece;
 
     private Drawable mExampleDrawable;
@@ -60,6 +61,7 @@ public class TwoPiecesPuzzle extends View {
 
 
     void init(){
+        this.isPieceTouched = false;
         this.puzzle = new Puzzle(oiseauBleu,2,4,this.getWidth(),this.getHeight());
 
         int x=0,y=0;
@@ -86,33 +88,31 @@ public class TwoPiecesPuzzle extends View {
                     case MotionEvent.ACTION_DOWN:
                         tX = (int)event.getX();
                         tY = (int)event.getY();
-                        Log.d("test tx ty","tX:"+tX+"    tY:"+tY);
-                        puzzle.setPieceTouched(tX,tY);
+                        isPieceTouched = puzzle.setPieceTouched(tX,tY);
 
-                        dX = puzzle.getPieceTouched().getX() - tX;
-                        dY = puzzle.getPieceTouched().getY() - tY;
-                        Log.d("test dXdY","dXDown:"+dX+"    dY:"+dY);
+                        if(isPieceTouched){
+                            dX = puzzle.getPieceTouched().getX() - tX;
+                            dY = puzzle.getPieceTouched().getY() - tY;
+                        }
                     break;
 
                     case MotionEvent.ACTION_MOVE:
 
-                        Log.d("test numPiece","numPieceMove:"+numPiece);
+                        if(isPieceTouched){
+                            puzzle.getPieceTouched().setX(dX+(int)event.getX());
+                            puzzle.getPieceTouched().setY(dY+(int)event.getY());
 
-                        //numPiece = numPieceTouched(tX,tY);
-                        /*Log.d("test numPiece","numPieceMove:"+numPiece);
-                        Log.d("test dXdY","dXMove:"+dX+"    dY:"+dY);
-                           */
+                            v.invalidate();
+                        }
 
-                        puzzle.getPieceTouched().setX(dX+(int)event.getX());
-                        puzzle.getPieceTouched().setY(dY+(int)event.getY());
-
-                        Log.d("test coordonnees img","X: "+puzzle.getListPiece().get(numPiece).getX()+"    Y:"+puzzle.getListPiece().get(numPiece).getY());
-
-                        v.invalidate();
                     break;
 
                     case MotionEvent.ACTION_UP:
-
+                        if(isPieceTouched){
+                            puzzle.getPieceTouched().doCollapsion();
+                            isPieceTouched = false;
+                            v.invalidate();
+                        }
                     break;
                 }
                 return true;

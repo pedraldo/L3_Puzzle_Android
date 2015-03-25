@@ -1,6 +1,7 @@
 package info.ups.fr.puzzlegame_template;
 
 import android.graphics.Bitmap;
+import android.util.Log;
 
 /**
  * Created by pierrepeinado on 24/03/15.
@@ -70,5 +71,57 @@ public class Piece {
         }
 
         return true;
+    }
+
+    public void doCollapsion(){
+        if(this.tPiece[INDEX_HAUT] != null){
+            if(Math.abs(this.x - this.tPiece[INDEX_HAUT].getX()) <= 20 && Math.abs(this.y - (this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight())) <= 20){
+                this.tBool[INDEX_HAUT] = true;
+                this.x = this.tPiece[INDEX_HAUT].getX();
+                this.y = this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight();
+                return;
+            }
+            else{
+                this.tBool[INDEX_HAUT] = false;
+            }
+        }
+
+        if(this.tPiece[INDEX_GAUCHE] != null){
+            if(Math.abs(this.x - (this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth())) <= 20 && Math.abs(this.y - this.tPiece[INDEX_GAUCHE].getY()) <= 20){
+                this.tBool[INDEX_GAUCHE] = true;
+                this.x = this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth();
+                this.y = this.tPiece[INDEX_GAUCHE].getY();
+                return;
+            }
+            else{
+                this.tBool[INDEX_GAUCHE] = false;
+            }
+
+        }
+
+        if(this.tPiece[INDEX_BAS] != null){
+            Log.d("test bas","absX: "+Math.abs(this.x - this.tPiece[INDEX_BAS].getX())+"    absY: "+Math.abs(this.y+this.bImage.getHeight() - this.tPiece[INDEX_BAS].getY()));
+            if(Math.abs(this.x - this.tPiece[INDEX_BAS].getX()) <= 20 && Math.abs(this.y+this.bImage.getHeight() - this.tPiece[INDEX_BAS].getY()) <= 20){
+                this.tBool[INDEX_BAS] = true;
+                this.x = this.tPiece[INDEX_BAS].getX();
+                this.y = this.tPiece[INDEX_BAS].getY()-this.bImage.getHeight();
+                return;
+            }
+            else{
+                this.tBool[INDEX_BAS] = false;
+            }
+        }
+
+        if(this.tPiece[INDEX_DROITE] != null){
+            if(Math.abs(this.x - this.tPiece[INDEX_DROITE].getX() + this.bImage.getWidth()) <= 20 && Math.abs(this.y - this.tPiece[INDEX_DROITE].getY()) <= 20){
+                this.tBool[INDEX_DROITE] = true;
+                this.x = this.tPiece[INDEX_DROITE].getX()-this.bImage.getWidth();
+                this.y = this.tPiece[INDEX_DROITE].getY();
+                return;
+            }
+            else{
+                this.tBool[INDEX_DROITE] = false;
+            }
+        }
     }
 }

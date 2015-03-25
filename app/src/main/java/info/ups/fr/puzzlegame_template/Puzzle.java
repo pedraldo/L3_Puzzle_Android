@@ -237,10 +237,14 @@ public class Puzzle {
         return this.piece_touched;
     }
 
-    public void setPieceTouched(int x, int y){
+    public boolean setPieceTouched(int x, int y){
         int pos = this.numPieceTouched(x,y);
-        this.piece_touched = this.pieces.get(pos);
-        this.pieces.add(this.pieces.remove(pos));
+        if(pos != -1){
+            this.piece_touched = this.pieces.get(pos);
+            this.pieces.add(this.pieces.remove(pos));
+            return true;
+        }
+        return false;
     }
 
     private int numPieceTouched(int x, int y){
@@ -251,7 +255,6 @@ public class Puzzle {
                 return i;
             }
         }
-        Log.d("test -1","return -1");
         return -1;
     }
     
