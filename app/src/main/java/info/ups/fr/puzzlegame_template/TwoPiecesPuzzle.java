@@ -28,6 +28,7 @@ public class TwoPiecesPuzzle extends View {
     private int dX, dY;
     private int imageTouched;
     private boolean first = false;
+    private int numPiece;
 
     private Drawable mExampleDrawable;
 
@@ -57,20 +58,57 @@ public class TwoPiecesPuzzle extends View {
         super(context, attrs, defStyle);
     }
 
+
     void init(){
         this.puzzle = new Puzzle(oiseauBleu,2,4,this.getWidth(),this.getHeight());
 
+        int x=0,y=0;
+        List<Piece> ListPiece = this.puzzle.getListPiece();
+        int largeur_piece = ListPiece.get(0).getBitmap().getWidth();
+        int hauteur_piece = ListPiece.get(0).getBitmap().getHeight();
+        int i;
+
+        for(i=0;i<ListPiece.size();i++){
+            ListPiece.get(i).setX(x);
+            ListPiece.get(i).setY(y);
+            x += largeur_piece;
+            if(x + largeur_piece > this.getWidth()){
+                x=0;
+                y+= hauteur_piece;
+            }
+        }
 
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 switch(event.getAction()){
                     case MotionEvent.ACTION_DOWN:
+                        tX = (int)event.getX();
+                        tY = (int)event.getY();
+                        Log.d("test tx ty","tX:"+tX+"    tY:"+tY);
+                        puzzle.setPieceTouched(tX,tY);
 
+                        dX = puzzle.getPieceTouched().getX() - tX;
+                        dY = puzzle.getPieceTouched().getY() - tY;
+                        Log.d("test dXdY","dXDown:"+dX+"    dY:"+dY);
                     break;
 
                     case MotionEvent.ACTION_MOVE:
 
+                        Log.d("test numPiece","numPieceMove:"+numPiece);
+
+                        //numPiece = numPieceTouched(tX,tY);
+                        /*Log.d("test numPiece","numPieceMove:"+numPiece);
+                        Log.d("test dXdY","dXMove:"+dX+"    dY:"+dY);
+                           */
+
+                        puzzle.getPieceTouched().setX(dX+(int)event.getX());
+                        puzzle.getPieceTouched().setY(dY+(int)event.getY());
+
+                        Log.d("test coordonnees img","X: "+puzzle.getListPiece().get(numPiece).getX()+"    Y:"+puzzle.getListPiece().get(numPiece).getY());
+
+                        v.invalidate();
                     break;
 
                     case MotionEvent.ACTION_UP:
@@ -163,20 +201,9 @@ public class TwoPiecesPuzzle extends View {
             this.first = true;
         }
 
-        List<Piece> shuffleListPiece = this.puzzle.getShuffleListPiece();
-        Log.d("Test nb elmts","nb elements : "+shuffleListPiece.size());
-        int largeur_piece = shuffleListPiece.get(0).getBitmap().getWidth();
-        int hauteur_piece = shuffleListPiece.get(0).getBitmap().getHeight();
-        int i;
-        int x=0,y=0;
 
-        for(i=0;i<shuffleListPiece.size();i++){
-            canvas.drawBitmap(shuffleListPiece.get(i).getBitmap(), x, y, null);
-            x += largeur_piece;
-            if(x + largeur_piece > this.getWidth()){
-                x=0;
-                y+= hauteur_piece;
-            }
+        for(Piece tmp:this.puzzle.getListPiece()){
+            canvas.drawBitmap(tmp.getBitmap(),tmp.getX(),tmp.getY(),null);
         }
 
         // Draw the example drawable.

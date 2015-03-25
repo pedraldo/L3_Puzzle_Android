@@ -14,11 +14,21 @@ import java.util.Random;
 public class Puzzle {
     
     private List<Piece> pieces;
+    private int largeur_pieces;
+    private int hauteur_pieces;
+    private Piece piece_touched;
     
     public Puzzle(Bitmap bImage, int nbLignes, int nbColonnes, int largeurVue, int hauteurVue){
+        int[] dimensions = new int[2];
         bImage = redimensionnerImage(bImage,largeurVue,hauteurVue);
-        decouperImage(bImage,nbLignes,nbColonnes);
+
+        dimensions = decouperImage(bImage,nbLignes,nbColonnes);
+        this.largeur_pieces = dimensions[0];
+        this.hauteur_pieces = dimensions[1];
+
         genererLiensPieces(nbLignes,nbColonnes);
+
+        this.pieces = this.getShuffleListPiece();
     }
     
     private Bitmap redimensionnerImage(Bitmap bImage, int largeur, int hauteur){
@@ -38,7 +48,7 @@ public class Puzzle {
     }
 
 
-    private void decouperImage(Bitmap b, int nbLignes, int nbColonnes){
+    private int[] decouperImage(Bitmap b, int nbLignes, int nbColonnes){
         int largeur = b.getWidth();
         int hauteur = b.getHeight();
         int largeur_piece = largeur/nbColonnes;
@@ -49,9 +59,13 @@ public class Puzzle {
         int i,j;
         for(i=0; i<nbLignes;i++){
             for(j=0;j<nbColonnes;j++){
-                this.pieces.add(new Piece(Bitmap.createBitmap(b, j * largeur_piece, i * hauteur_piece, largeur_piece, hauteur_piece)));
+                this.pieces.add(new Piece(Bitmap.createBitmap(b, j * largeur_piece, i * hauteur_piece, largeur_piece, hauteur_piece),j*largeur_piece,i*hauteur_piece));
             }
         }
+
+        int[] retour = {largeur_piece,hauteur_piece};
+
+        return retour;
     }
 
     private void genererLiensPieces(int nbLignes, int nbColonnes){
@@ -200,11 +214,45 @@ public class Puzzle {
         }
     }
 
-    public List<Piece> getShuffleListPiece(){
+    private List<Piece> getShuffleListPiece(){
         List<Piece> shuffleList = this.pieces.subList(0,this.pieces.size());
         Collections.shuffle(shuffleList, new Random());
 
         return shuffleList;
+    }
+
+    public List<Piece> getListPiece(){
+        return this.pieces;
+    }
+
+    public int getLargeurPieces(){
+        return this.largeur_pieces;
+    }
+
+    public int getHauteurPieces(){
+        return this.hauteur_pieces;
+    }
+
+    public Piece getPieceTouched(){
+        return this.piece_touched;
+    }
+
+    public void setPieceTouched(int x, int y){
+        int pos = this.numPieceTouched(x,y);
+        this.piece_touched = this.pieces.get(pos);
+        this.pieces.add(this.pieces.remove(pos));
+    }
+
+    private int numPieceTouched(int x, int y){
+
+        for(int i=this.pieces.size()-1; i>=0; i--){
+            if(x >= this.pieces.get(i).getX() && x <= this.pieces.get(i).getX()+this.getLargeurPieces()
+                    && y >= this.pieces.get(i).getY() && y <= this.pieces.get(i).getY()+this.getHauteurPieces()){
+                return i;
+            }
+        }
+        Log.d("test -1","return -1");
+        return -1;
     }
     
 }

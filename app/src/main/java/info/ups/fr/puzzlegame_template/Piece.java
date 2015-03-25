@@ -16,14 +16,14 @@ public class Piece {
     private boolean tBool[];
     private Piece tPiece[];
 
-    public Piece(Bitmap bImage){
+    public Piece(Bitmap bImage, int x, int y){
         this.tBool = new boolean[]{false, false, false, false};
 
         this.tPiece = new Piece[4];
 
         this.bImage = bImage;
-        this.x = 0;
-        this.y = 0;
+        this.x = x;
+        this.y = y;
     }
 
     public Bitmap getBitmap(){
