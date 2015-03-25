@@ -28,6 +28,8 @@ public class TwoPiecesPuzzle extends View {
     private int dX, dY;
     private int imageTouched;
     private boolean first = false;
+    private boolean isPieceTouched;
+    private int numPiece;
 
     private Drawable mExampleDrawable;
 
@@ -59,99 +61,75 @@ public class TwoPiecesPuzzle extends View {
         super(context, attrs, defStyle);
     }
 
+
     void init(){
+        this.isPieceTouched = false;
         this.puzzle = new Puzzle(oiseauBleu,2,4,this.getWidth(),this.getHeight());
 
+        int x=0,y=0;
+        List<Piece> ListPiece = this.puzzle.getListPiece();
+        int largeur_piece = ListPiece.get(0).getBitmap().getWidth();
+        int hauteur_piece = ListPiece.get(0).getBitmap().getHeight();
+        int i;
 
-        this.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-
-                    break;
-
-                    case MotionEvent.ACTION_MOVE:
-
-                    break;
-
-                    case MotionEvent.ACTION_UP:
-
-                    break;
-                }
-                return true;
+        for(i=0;i<ListPiece.size();i++){
+            ListPiece.get(i).setX(x);
+            ListPiece.get(i).setY(y);
+            x += largeur_piece;
+            if(x + largeur_piece > this.getWidth()){
+                x=0;
+                y+= hauteur_piece;
             }
-        });
-
-
-
-     /*   this.x1 = this.getLeft();
-        this.y1 = this.getTop();
-        this.x2 = this.getLeft() + this.getWidth()/3;
-        this.y2 = this.getTop() + this.getHeight() + 20 + this.myPict2.getHeight();
+        }
 
         this.setOnTouchListener(new OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
+
                 switch(event.getAction()){
                     case MotionEvent.ACTION_DOWN:
                         tX = (int)event.getX();
                         tY = (int)event.getY();
+                        isPieceTouched = puzzle.setPieceTouched(tX,tY);
 
-
-                        if(tX <= x1+myPict1.getWidth() && tX >= x1 && tY <= y1+myPict1.getHeight() && tY >= y1){
-                            imageTouched = 1;
-                            dX = x1 - tX;
-                            dY = y1 - tY;
-                        }
-
-                        if(tX <= x2+myPict2.getWidth() && tX >= x2 && tY <= y2+myPict2.getHeight() && tY >= y2){
-                            imageTouched = 2;
-                            dX = x2 - tX;
-                            dY = y2 - tY;
-
+                        if(isPieceTouched){
+                            //dX = puzzle.getPieceTouched().getX() - tX;
+                            //dY = puzzle.getPieceTouched().getY() - tY;
                         }
                     break;
 
                     case MotionEvent.ACTION_MOVE:
-                        switch (imageTouched){
-                            case 1:
-                                x1 = dX + (int)event.getX();
-                                y1 = dY + (int)event.getY();
 
-                            break;
-
-                            case 2:
-                                x2 = dX + (int)event.getX();
-                                y2 = dY + (int)event.getY();
-
-                            break;
+                        if(isPieceTouched && isPiecesTouchedIn((int)event.getX()-tX,(int)event.getY()-tY)){
+                            puzzle.setPiecesTouched((int)event.getX()-tX,(int)event.getY()-tY);
+                            tX = (int)event.getX();
+                            tY = (int)event.getY();
+                            v.invalidate();
                         }
 
-                        v.invalidate();
                     break;
 
                     case MotionEvent.ACTION_UP:
-                        if(x1 + myPict1.getWidth() - x2 <= 20 && x1 + myPict1.getWidth() - x2 >= -20 && y1 - y2 <= 20 && y1 - y2 >= -20){
-                            switch(imageTouched){
-                                case 1:
-                                    x1 = x2 - myPict1.getWidth();
-                                    y1 = y2;
-                                break;
-
-                                case 2:
-                                    x2 = x1 + myPict1.getWidth();
-                                    y2 = y1;
-                                break;
-                            }
+                        if(isPieceTouched){
+                            puzzle.doCollapsions();
+                            puzzle.clearPiecesTouched();
+                            isPieceTouched = false;
+                            v.invalidate();
                         }
-                        v.invalidate();
                     break;
                 }
                 return true;
             }
         });
-    */
+    }
+
+    private boolean isPiecesTouchedIn(int dX, int dY){
+        for(Piece tmp:puzzle.getListPiecesTouched()){
+            if(tmp.getX()+dX+tmp.getBitmap().getWidth() > this.getWidth()+tmp.getBitmap().getWidth()/2 || tmp.getX()+dX < -tmp.getBitmap().getWidth()/2 || tmp.getY()+dY+tmp.getBitmap().getHeight() > this.getHeight()+tmp.getBitmap().getHeight()/2 || tmp.getY()+dY < -tmp.getBitmap().getHeight()/2){
+                return false;
+            }
+        }
+        return true;
     }
 
 
@@ -165,20 +143,9 @@ public class TwoPiecesPuzzle extends View {
             this.first = true;
         }
 
-        List<Piece> shuffleListPiece = this.puzzle.getShuffleListPiece();
-        Log.d("Test nb elmts","nb elements : "+shuffleListPiece.size());
-        int largeur_piece = shuffleListPiece.get(0).getBitmap().getWidth();
-        int hauteur_piece = shuffleListPiece.get(0).getBitmap().getHeight();
-        int i;
-        int x=0,y=0;
 
-        for(i=0;i<shuffleListPiece.size();i++){
-            canvas.drawBitmap(shuffleListPiece.get(i).getBitmap(), x, y, null);
-            x += largeur_piece;
-            if(x + largeur_piece > this.getWidth()){
-                x=0;
-                y+= hauteur_piece;
-            }
+        for(Piece tmp:this.puzzle.getListPiece()){
+            canvas.drawBitmap(tmp.getBitmap(),tmp.getX(),tmp.getY(),null);
         }
 
         // Draw the example drawable.
