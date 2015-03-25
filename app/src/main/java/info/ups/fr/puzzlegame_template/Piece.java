@@ -73,10 +73,15 @@ public class Piece {
         return true;
     }
 
+    public void setCollapsion(int pos){
+        this.tBool[pos] = true;
+    }
+
     public void doCollapsion(){
         if(this.tPiece[INDEX_HAUT] != null){
             if(Math.abs(this.x - this.tPiece[INDEX_HAUT].getX()) <= 20 && Math.abs(this.y - (this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight())) <= 20){
                 this.tBool[INDEX_HAUT] = true;
+                this.tPiece[INDEX_HAUT].setCollapsion(INDEX_BAS);
                 this.x = this.tPiece[INDEX_HAUT].getX();
                 this.y = this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight();
                 return;
@@ -89,6 +94,7 @@ public class Piece {
         if(this.tPiece[INDEX_GAUCHE] != null){
             if(Math.abs(this.x - (this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth())) <= 20 && Math.abs(this.y - this.tPiece[INDEX_GAUCHE].getY()) <= 20){
                 this.tBool[INDEX_GAUCHE] = true;
+                this.tPiece[INDEX_GAUCHE].setCollapsion(INDEX_DROITE);
                 this.x = this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth();
                 this.y = this.tPiece[INDEX_GAUCHE].getY();
                 return;
@@ -103,6 +109,7 @@ public class Piece {
             Log.d("test bas","absX: "+Math.abs(this.x - this.tPiece[INDEX_BAS].getX())+"    absY: "+Math.abs(this.y+this.bImage.getHeight() - this.tPiece[INDEX_BAS].getY()));
             if(Math.abs(this.x - this.tPiece[INDEX_BAS].getX()) <= 20 && Math.abs(this.y+this.bImage.getHeight() - this.tPiece[INDEX_BAS].getY()) <= 20){
                 this.tBool[INDEX_BAS] = true;
+                this.tPiece[INDEX_BAS].setCollapsion(INDEX_HAUT);
                 this.x = this.tPiece[INDEX_BAS].getX();
                 this.y = this.tPiece[INDEX_BAS].getY()-this.bImage.getHeight();
                 return;
@@ -115,6 +122,7 @@ public class Piece {
         if(this.tPiece[INDEX_DROITE] != null){
             if(Math.abs(this.x - this.tPiece[INDEX_DROITE].getX() + this.bImage.getWidth()) <= 20 && Math.abs(this.y - this.tPiece[INDEX_DROITE].getY()) <= 20){
                 this.tBool[INDEX_DROITE] = true;
+                this.tPiece[INDEX_DROITE].setCollapsion(INDEX_GAUCHE);
                 this.x = this.tPiece[INDEX_DROITE].getX()-this.bImage.getWidth();
                 this.y = this.tPiece[INDEX_DROITE].getY();
                 return;

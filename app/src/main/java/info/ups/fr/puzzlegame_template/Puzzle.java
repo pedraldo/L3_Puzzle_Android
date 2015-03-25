@@ -16,7 +16,7 @@ public class Puzzle {
     private List<Piece> pieces;
     private int largeur_pieces;
     private int hauteur_pieces;
-    private Piece piece_touched;
+    private List<Piece> pieces_touched;
     
     public Puzzle(Bitmap bImage, int nbLignes, int nbColonnes, int largeurVue, int hauteurVue){
         int[] dimensions = new int[2];
@@ -29,6 +29,7 @@ public class Puzzle {
         genererLiensPieces(nbLignes,nbColonnes);
 
         this.pieces = this.getShuffleListPiece();
+        this.pieces_touched = new ArrayList<Piece>();
     }
     
     private Bitmap redimensionnerImage(Bitmap bImage, int largeur, int hauteur){
@@ -233,18 +234,36 @@ public class Puzzle {
         return this.hauteur_pieces;
     }
 
-    public Piece getPieceTouched(){
-        return this.piece_touched;
+    public void setPiecesTouched(int dX, int dY){
+        for(Piece tmp:this.pieces_touched){
+            tmp.setX(tmp.getX()+dX);
+            tmp.setY(tmp.getY()+dY);
+        }
     }
 
     public boolean setPieceTouched(int x, int y){
         int pos = this.numPieceTouched(x,y);
         if(pos != -1){
-            this.piece_touched = this.pieces.get(pos);
+            this.pieces_touched.add(this.pieces.get(pos));
             this.pieces.add(this.pieces.remove(pos));
+            this.completeListTouched(this.pieces_touched.get(0));
             return true;
         }
         return false;
+    }
+
+    private void completeListTouched(Piece p){
+        for(int i=0; i<4;i++){
+            if(p.getBool(i)){
+                Piece tmp = p.getCollapsedPieces(i);
+                if(tmp != null){
+                    if(!this.pieces_touched.contains(tmp)){
+                        this.pieces_touched.add(tmp);
+                        this.completeListTouched(tmp);
+                    }
+                }
+            }
+        }
     }
 
     private int numPieceTouched(int x, int y){
@@ -256,6 +275,20 @@ public class Puzzle {
             }
         }
         return -1;
+    }
+
+    public void doCollapsions(){
+        for(Piece tmp:this.pieces_touched){
+            tmp.doCollapsion();
+        }
+    }
+
+    public void clearPiecesTouched(){
+        this.pieces_touched.clear();
+    }
+
+    public List<Piece> getListPiecesTouched(){
+        return this.pieces_touched;
     }
     
 }

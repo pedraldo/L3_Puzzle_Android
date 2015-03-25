@@ -91,17 +91,17 @@ public class TwoPiecesPuzzle extends View {
                         isPieceTouched = puzzle.setPieceTouched(tX,tY);
 
                         if(isPieceTouched){
-                            dX = puzzle.getPieceTouched().getX() - tX;
-                            dY = puzzle.getPieceTouched().getY() - tY;
+                            //dX = puzzle.getPieceTouched().getX() - tX;
+                            //dY = puzzle.getPieceTouched().getY() - tY;
                         }
                     break;
 
                     case MotionEvent.ACTION_MOVE:
 
-                        if(isPieceTouched){
-                            puzzle.getPieceTouched().setX(dX+(int)event.getX());
-                            puzzle.getPieceTouched().setY(dY+(int)event.getY());
-
+                        if(isPieceTouched && isPiecesTouchedIn((int)event.getX()-tX,(int)event.getY()-tY)){
+                            puzzle.setPiecesTouched((int)event.getX()-tX,(int)event.getY()-tY);
+                            tX = (int)event.getX();
+                            tY = (int)event.getY();
                             v.invalidate();
                         }
 
@@ -109,7 +109,8 @@ public class TwoPiecesPuzzle extends View {
 
                     case MotionEvent.ACTION_UP:
                         if(isPieceTouched){
-                            puzzle.getPieceTouched().doCollapsion();
+                            puzzle.doCollapsions();
+                            puzzle.clearPiecesTouched();
                             isPieceTouched = false;
                             v.invalidate();
                         }
@@ -118,76 +119,15 @@ public class TwoPiecesPuzzle extends View {
                 return true;
             }
         });
+    }
 
-
-
-     /*   this.x1 = this.getLeft();
-        this.y1 = this.getTop();
-        this.x2 = this.getLeft() + this.getWidth()/3;
-        this.y2 = this.getTop() + this.getHeight() + 20 + this.myPict2.getHeight();
-
-        this.setOnTouchListener(new OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                switch(event.getAction()){
-                    case MotionEvent.ACTION_DOWN:
-                        tX = (int)event.getX();
-                        tY = (int)event.getY();
-
-
-                        if(tX <= x1+myPict1.getWidth() && tX >= x1 && tY <= y1+myPict1.getHeight() && tY >= y1){
-                            imageTouched = 1;
-                            dX = x1 - tX;
-                            dY = y1 - tY;
-                        }
-
-                        if(tX <= x2+myPict2.getWidth() && tX >= x2 && tY <= y2+myPict2.getHeight() && tY >= y2){
-                            imageTouched = 2;
-                            dX = x2 - tX;
-                            dY = y2 - tY;
-
-                        }
-                    break;
-
-                    case MotionEvent.ACTION_MOVE:
-                        switch (imageTouched){
-                            case 1:
-                                x1 = dX + (int)event.getX();
-                                y1 = dY + (int)event.getY();
-
-                            break;
-
-                            case 2:
-                                x2 = dX + (int)event.getX();
-                                y2 = dY + (int)event.getY();
-
-                            break;
-                        }
-
-                        v.invalidate();
-                    break;
-
-                    case MotionEvent.ACTION_UP:
-                        if(x1 + myPict1.getWidth() - x2 <= 20 && x1 + myPict1.getWidth() - x2 >= -20 && y1 - y2 <= 20 && y1 - y2 >= -20){
-                            switch(imageTouched){
-                                case 1:
-                                    x1 = x2 - myPict1.getWidth();
-                                    y1 = y2;
-                                break;
-
-                                case 2:
-                                    x2 = x1 + myPict1.getWidth();
-                                    y2 = y1;
-                                break;
-                            }
-                        }
-                        v.invalidate();
-                    break;
-                }
-                return true;
+    private boolean isPiecesTouchedIn(int dX, int dY){
+        for(Piece tmp:puzzle.getListPiecesTouched()){
+            if(tmp.getX()+dX+tmp.getBitmap().getWidth() > this.getWidth()+tmp.getBitmap().getWidth()/2 || tmp.getX()+dX < -tmp.getBitmap().getWidth()/2 || tmp.getY()+dY+tmp.getBitmap().getHeight() > this.getHeight()+tmp.getBitmap().getHeight()/2 || tmp.getY()+dY < -tmp.getBitmap().getHeight()/2){
+                return false;
             }
-        });
-    */
+        }
+        return true;
     }
 
 
