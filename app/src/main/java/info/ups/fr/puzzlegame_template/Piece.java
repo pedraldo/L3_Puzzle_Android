@@ -73,15 +73,15 @@ public class Piece {
         return true;
     }
 
-    public void setCollapsion(int pos){
-        this.tBool[pos] = true;
+    public void setCollapsion(int pos, boolean state){
+        this.tBool[pos] = state;
     }
 
     public void doCollapsion(){
-        if(this.tPiece[INDEX_HAUT] != null){
+        if(this.tPiece[INDEX_HAUT] != null && !this.tBool[INDEX_HAUT]){
             if(Math.abs(this.x - this.tPiece[INDEX_HAUT].getX()) <= 20 && Math.abs(this.y - (this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight())) <= 20){
                 this.tBool[INDEX_HAUT] = true;
-                this.tPiece[INDEX_HAUT].setCollapsion(INDEX_BAS);
+                this.tPiece[INDEX_HAUT].setCollapsion(INDEX_BAS,true);
                 this.x = this.tPiece[INDEX_HAUT].getX();
                 this.y = this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight();
                 return;
@@ -90,11 +90,14 @@ public class Piece {
                 this.tBool[INDEX_HAUT] = false;
             }
         }
+        else{
+            this.tBool[INDEX_HAUT] = true;
+        }
 
-        if(this.tPiece[INDEX_GAUCHE] != null){
+        if(this.tPiece[INDEX_GAUCHE] != null  && !this.tBool[INDEX_GAUCHE]){
             if(Math.abs(this.x - (this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth())) <= 20 && Math.abs(this.y - this.tPiece[INDEX_GAUCHE].getY()) <= 20){
                 this.tBool[INDEX_GAUCHE] = true;
-                this.tPiece[INDEX_GAUCHE].setCollapsion(INDEX_DROITE);
+                this.tPiece[INDEX_GAUCHE].setCollapsion(INDEX_DROITE,true);
                 this.x = this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth();
                 this.y = this.tPiece[INDEX_GAUCHE].getY();
                 return;
@@ -104,12 +107,14 @@ public class Piece {
             }
 
         }
+        else{
+            this.tBool[INDEX_GAUCHE] = true;
+        }
 
-        if(this.tPiece[INDEX_BAS] != null){
-            Log.d("test bas","absX: "+Math.abs(this.x - this.tPiece[INDEX_BAS].getX())+"    absY: "+Math.abs(this.y+this.bImage.getHeight() - this.tPiece[INDEX_BAS].getY()));
+        if(this.tPiece[INDEX_BAS] != null  && !this.tBool[INDEX_BAS]){
             if(Math.abs(this.x - this.tPiece[INDEX_BAS].getX()) <= 20 && Math.abs(this.y+this.bImage.getHeight() - this.tPiece[INDEX_BAS].getY()) <= 20){
                 this.tBool[INDEX_BAS] = true;
-                this.tPiece[INDEX_BAS].setCollapsion(INDEX_HAUT);
+                this.tPiece[INDEX_BAS].setCollapsion(INDEX_HAUT,true);
                 this.x = this.tPiece[INDEX_BAS].getX();
                 this.y = this.tPiece[INDEX_BAS].getY()-this.bImage.getHeight();
                 return;
@@ -118,11 +123,14 @@ public class Piece {
                 this.tBool[INDEX_BAS] = false;
             }
         }
+        else{
+            this.tBool[INDEX_BAS] = true;
+        }
 
-        if(this.tPiece[INDEX_DROITE] != null){
+        if(this.tPiece[INDEX_DROITE] != null  && !this.tBool[INDEX_DROITE]){
             if(Math.abs(this.x - this.tPiece[INDEX_DROITE].getX() + this.bImage.getWidth()) <= 20 && Math.abs(this.y - this.tPiece[INDEX_DROITE].getY()) <= 20){
                 this.tBool[INDEX_DROITE] = true;
-                this.tPiece[INDEX_DROITE].setCollapsion(INDEX_GAUCHE);
+                this.tPiece[INDEX_DROITE].setCollapsion(INDEX_GAUCHE,true);
                 this.x = this.tPiece[INDEX_DROITE].getX()-this.bImage.getWidth();
                 this.y = this.tPiece[INDEX_DROITE].getY();
                 return;
@@ -130,6 +138,64 @@ public class Piece {
             else{
                 this.tBool[INDEX_DROITE] = false;
             }
+        }
+        else{
+            this.tBool[INDEX_DROITE] = true;
+        }
+    }
+
+    public void testCollapsions(){
+        if(this.getCollapsedPieces(INDEX_HAUT) != null){
+            if(Math.abs(this.x - this.getCollapsedPieces(INDEX_HAUT).getX()) == 0 && Math.abs(this.y - (this.getCollapsedPieces(INDEX_HAUT).getY()+this.bImage.getHeight())) == 0){
+                this.setCollapsion(INDEX_HAUT, true);
+                this.tPiece[INDEX_HAUT].setCollapsion(INDEX_BAS,true);
+            }
+            else{
+                //this.setCollapsion(INDEX_HAUT, false);
+            }
+        }
+        else{
+            this.setCollapsion(INDEX_HAUT, true);
+        }
+
+        if(this.getCollapsedPieces(INDEX_GAUCHE) != null){
+            if(Math.abs(this.x - (this.getCollapsedPieces(INDEX_GAUCHE).getX()+this.bImage.getWidth())) == 0 && Math.abs(this.y - this.getCollapsedPieces(INDEX_GAUCHE).getY()) == 0){
+                this.setCollapsion(INDEX_GAUCHE, true);
+                this.tPiece[INDEX_GAUCHE].setCollapsion(INDEX_DROITE,true);
+            }
+            else{
+                //this.setCollapsion(INDEX_GAUCHE, false);
+            }
+
+        }
+        else{
+            this.setCollapsion(INDEX_GAUCHE, true);
+        }
+
+        if(this.getCollapsedPieces(INDEX_BAS) != null){
+            if(Math.abs(this.x - this.getCollapsedPieces(INDEX_BAS).getX()) == 0 && Math.abs(this.y+this.bImage.getHeight() - this.getCollapsedPieces(INDEX_BAS).getY()) == 0){
+                this.setCollapsion(INDEX_BAS, true);
+                this.tPiece[INDEX_BAS].setCollapsion(INDEX_HAUT,true);
+            }
+            else{
+                //this.setCollapsion(INDEX_BAS, false);
+            }
+        }
+        else{
+            this.setCollapsion(INDEX_BAS, true);
+        }
+
+        if(this.getCollapsedPieces(INDEX_DROITE) != null){
+            if(Math.abs(this.x - this.getCollapsedPieces(INDEX_DROITE).getX() + this.bImage.getWidth()) == 0 && Math.abs(this.y - this.getCollapsedPieces(INDEX_DROITE).getY()) == 0){
+                this.setCollapsion(INDEX_DROITE, true);
+                this.tPiece[INDEX_DROITE].setCollapsion(INDEX_GAUCHE,true);
+            }
+            else{
+                //this.setCollapsion(INDEX_DROITE, false);
+            }
+        }
+        else{
+            this.setCollapsion(INDEX_DROITE, true);
         }
     }
 }
