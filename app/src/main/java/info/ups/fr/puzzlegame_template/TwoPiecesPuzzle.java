@@ -150,7 +150,7 @@ public class TwoPiecesPuzzle extends View {
                         getContext().startActivity(intent);
                     }
                 })
-                .setIcon(android.R.drawable.ic_dialog_alert)
+                .setIcon(R.drawable.vvert)
                 .show();
     }
 
