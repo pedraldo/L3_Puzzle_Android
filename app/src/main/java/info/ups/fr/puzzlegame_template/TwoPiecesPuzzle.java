@@ -1,6 +1,9 @@
 package info.ups.fr.puzzlegame_template;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +12,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -64,7 +68,7 @@ public class TwoPiecesPuzzle extends View {
 
     void init(){
         this.isPieceTouched = false;
-        this.puzzle = new Puzzle(oiseauBleu,2,4,this.getWidth(),this.getHeight());
+        this.puzzle = new Puzzle(oiseauBleu,2,2,this.getWidth(),this.getHeight());
 
         int x=0,y=0;
         List<Piece> ListPiece = this.puzzle.getListPiece();
@@ -100,7 +104,7 @@ public class TwoPiecesPuzzle extends View {
 
                     case MotionEvent.ACTION_MOVE:
 
-                        if(isPieceTouched && isPiecesTouchedIn((int)event.getX()-tX,(int)event.getY()-tY)){
+                        if(isPieceTouched && isPiecesTouchedIn((int) event.getX() - tX, (int) event.getY() - tY)){
                             puzzle.setPiecesTouched((int)event.getX()-tX,(int)event.getY()-tY);
                             tX = (int)event.getX();
                             tY = (int)event.getY();
@@ -115,6 +119,10 @@ public class TwoPiecesPuzzle extends View {
                             puzzle.clearPiecesTouched();
                             isPieceTouched = false;
                             v.invalidate();
+
+                            if(puzzle.isPuzzleCompleted()){
+                                launchDialogFinish();
+                            }
                         }
                     break;
                 }
@@ -130,6 +138,20 @@ public class TwoPiecesPuzzle extends View {
             }
         }
         return true;
+    }
+
+    private void launchDialogFinish(){
+        new AlertDialog.Builder(this.getContext())
+                .setTitle("Partie finie")
+                .setMessage("Bravo ! Vous avez réussi à assembler le puzzle !")
+                .setPositiveButton("Continuer", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(getContext(),MainActivity.class);
+                        getContext().startActivity(intent);
+                    }
+                })
+                .setIcon(android.R.drawable.ic_dialog_alert)
+                .show();
     }
 
 

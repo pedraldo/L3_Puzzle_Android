@@ -1,7 +1,9 @@
 package info.ups.fr.puzzlegame_template;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -281,6 +283,13 @@ public class Puzzle {
         for(Piece tmp:this.pieces_touched){
             tmp.doCollapsion();
         }
+        this.testCollapsions();
+    }
+
+    private void testCollapsions(){
+        for(Piece piece:this.pieces){
+            piece.testCollapsions();
+        }
     }
 
     public void clearPiecesTouched(){
@@ -289,6 +298,15 @@ public class Puzzle {
 
     public List<Piece> getListPiecesTouched(){
         return this.pieces_touched;
+    }
+
+    public boolean isPuzzleCompleted(){
+        for(Piece piece:this.pieces){
+            if(!piece.allCollapsedAreGood()){
+                return false;
+            }
+        }
+        return true;
     }
     
 }
