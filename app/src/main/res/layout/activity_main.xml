@@ -7,12 +7,14 @@
     tools:context="info.ups.fr.puzzlegame_template.MainActivity">
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/button"
         android:text="Lancer le puzzle"
+        android:textColor="@color/white"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
+        android:background="@drawable/button_blue"
         />
 
 </RelativeLayout>

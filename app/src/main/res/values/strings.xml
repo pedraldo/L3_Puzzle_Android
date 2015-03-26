@@ -6,4 +6,8 @@
     <string name="action_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
 
+    <color name="blue1">#3A8EBA</color>
+    <color name="blue2">#0000FF</color>
+    <color name="white">#FFFFFF</color>
+
 </resources>
