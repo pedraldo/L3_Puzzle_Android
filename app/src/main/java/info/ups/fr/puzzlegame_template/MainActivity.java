@@ -8,6 +8,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import java.util.logging.Level;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -22,6 +24,15 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent intent = new Intent(getBaseContext(),PuzzleActivity.class);
                 startActivity(intent);
+            }
+        });
+
+        Button level_button = (Button)this.findViewById(R.id.level_button);
+        level_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent_level = new Intent(getBaseContext(),LevelActivity.class);
+                startActivity(intent_level);
             }
         });
     }

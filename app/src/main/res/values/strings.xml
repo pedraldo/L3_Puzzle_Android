@@ -9,5 +9,6 @@
     <color name="blue1">#3A8EBA</color>
     <color name="blue2">#0000FF</color>
     <color name="white">#FFFFFF</color>
+    <string name="title_activity_level">level</string>
 
 </resources>
