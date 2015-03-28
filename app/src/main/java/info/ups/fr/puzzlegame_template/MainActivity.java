@@ -6,37 +6,62 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.AdapterView;
+import android.widget.ListView;
 
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    private ListView listviewLevel;
+    private List<Level> listLevel = new ArrayList<Level>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Button b = (Button)this.findViewById(R.id.button);
-        b.setOnClickListener(new View.OnClickListener() {
+        this.initLevel();
+        this.initListView();
+    }
+
+    private void initLevel(){
+        this.listLevel.add(new Level(R.drawable.niveau1,1,Difficulte.FACILE));
+        this.listLevel.add(new Level(R.drawable.niveau2,2,Difficulte.FACILE));
+        this.listLevel.add(new Level(R.drawable.niveau3,3,Difficulte.FACILE));
+        this.listLevel.add(new Level(R.drawable.niveau4,4,Difficulte.MOYEN));
+        this.listLevel.add(new Level(R.drawable.niveau5,5,Difficulte.MOYEN));
+        this.listLevel.add(new Level(R.drawable.niveau6,6,Difficulte.MOYEN));
+        this.listLevel.add(new Level(R.drawable.niveau7,7,Difficulte.DIFFICILE));
+        this.listLevel.add(new Level(R.drawable.niveau8,8,Difficulte.DIFFICILE));
+        this.listLevel.add(new Level(R.drawable.niveau9,9,Difficulte.DIFFICILE));
+        this.listLevel.add(new Level(R.drawable.niveau10,10,Difficulte.EXPERT));
+        this.listLevel.add(new Level(R.drawable.niveau11,11,Difficulte.EXPERT));
+        this.listLevel.add(new Level(R.drawable.niveau12,12,Difficulte.EXPERT));
+    }
+
+    private void initListView(){
+        this.listviewLevel = (ListView) this.findViewById(R.id.listeLevel);
+        Level[] values= new Level[this.listLevel.size()];
+        for(int i = 0; i < this.listLevel.size(); i++){
+            values[i] = this.listLevel.get(i);
+        }
+        ListLevelAdapter adapter = new ListLevelAdapter(this, R.layout.list_level_row, values);
+        this.listviewLevel.setAdapter(adapter);
+
+        this.listviewLevel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getBaseContext(),PuzzleActivity.class);
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Intent intent = new Intent(getBaseContext(), PuzzleActivity.class);
+                intent.putExtra("imgRes", listLevel.get(position).getLocation());
+                intent.putExtra("nbLignes", listLevel.get(position).nbLignes());
+                intent.putExtra("nbColonnes", listLevel.get(position).nbColonnes());
                 startActivity(intent);
             }
         });
-
-        Button level_button = (Button)this.findViewById(R.id.level_button);
-        level_button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent_level = new Intent(getBaseContext(),LevelActivity.class);
-                startActivity(intent_level);
-            }
-        });
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

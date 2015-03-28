@@ -9,6 +9,10 @@
     <color name="blue1">#3A8EBA</color>
     <color name="blue2">#0000FF</color>
     <color name="white">#FFFFFF</color>
+    <color name="colorFacile">#34C924</color>
+    <color name="colorMoyen">#1034A6</color>
+    <color name="colorDifficile">#ED0000</color>
+    <color name="colorExpert">#000000</color>
     <string name="title_activity_level">level</string>
 
 </resources>

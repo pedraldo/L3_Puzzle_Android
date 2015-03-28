@@ -12,6 +12,9 @@ public class PuzzleActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_puzzle);
+
+        TwoPiecesPuzzle puzzleView = (TwoPiecesPuzzle)this.findViewById(R.id.view);
+        puzzleView.setImage(getIntent().getIntExtra("imgRes", R.drawable.niveau1), getIntent().getIntExtra("nbLignes", 2), getIntent().getIntExtra("nbColonnes",2));
     }
 
 

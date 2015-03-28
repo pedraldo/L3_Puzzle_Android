@@ -9,16 +9,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Toast;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Random;
 
 
 /**
@@ -32,7 +26,11 @@ public class TwoPiecesPuzzle extends View {
     private int dX, dY;
     private int imageTouched;
     private boolean first = false;
+    private boolean isSet = false;
     private boolean isPieceTouched;
+    private int nbLignes;
+    private int nbColonnes;
+    private Bitmap img;
     private int numPiece;
 
     private Drawable mExampleDrawable;
@@ -45,7 +43,7 @@ public class TwoPiecesPuzzle extends View {
 	
 	private int test;
 
-    Bitmap oiseauBleu = BitmapFactory.decodeResource(getResources(), R.drawable.oiseaubleu);
+    Bitmap oiseauBleu = BitmapFactory.decodeResource(getResources(), R.drawable.niveau1);
 
     List<Bitmap> ListBitmap;
     List<Bitmap> ListBitmapShuffle;
@@ -65,10 +63,19 @@ public class TwoPiecesPuzzle extends View {
         super(context, attrs, defStyle);
     }
 
+    public void setImage(int resImg, int nbLignes, int nbColonnes){
+        if(!this.isSet){
+            this.nbLignes = nbLignes;
+            this.nbColonnes = nbColonnes;
+            this.img = BitmapFactory.decodeResource(getResources(), resImg);
+            this.isSet = true;
+            this.invalidate();
+        }
+    }
 
     void init(){
         this.isPieceTouched = false;
-        this.puzzle = new Puzzle(oiseauBleu,2,2,this.getWidth(),this.getHeight());
+        this.puzzle = new Puzzle(this.img,this.nbLignes,this.nbColonnes,this.getWidth(),this.getHeight());
 
         int x=0,y=0;
         List<Piece> ListPiece = this.puzzle.getListPiece();
@@ -159,20 +166,22 @@ public class TwoPiecesPuzzle extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        if(!first){
-            this.init();
-            this.invalidate();
-            this.first = true;
-        }
+        if(this.isSet) {
+            if (!first) {
+                this.init();
+                this.invalidate();
+                this.first = true;
+            }
 
 
-        for(Piece tmp:this.puzzle.getListPiece()){
-            canvas.drawBitmap(tmp.getBitmap(),tmp.getX(),tmp.getY(),null);
-        }
+            for (Piece tmp : this.puzzle.getListPiece()) {
+                canvas.drawBitmap(tmp.getBitmap(), tmp.getX(), tmp.getY(), null);
+            }
 
-        // Draw the example drawable.
-        if (mExampleDrawable != null) {
-            mExampleDrawable.draw(canvas);
+            // Draw the example drawable.
+            if (mExampleDrawable != null) {
+                mExampleDrawable.draw(canvas);
+            }
         }
     }
 
