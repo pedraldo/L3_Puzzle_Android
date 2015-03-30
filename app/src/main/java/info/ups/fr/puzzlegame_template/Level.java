@@ -25,9 +25,9 @@ public class Level {
             case MOYEN:
                 return 3;
             case DIFFICILE:
-                return 6;
+                return 4;
             case EXPERT:
-                return 10;
+                return 6;
         }
 
         return 0;
@@ -40,9 +40,9 @@ public class Level {
             case MOYEN:
                 return 3;
             case DIFFICILE:
-                return 6;
+                return 4;
             case EXPERT:
-                return 10;
+                return 6;
         }
 
         return 0;

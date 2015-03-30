@@ -133,7 +133,6 @@ public class Puzzle {
                 tmp.setCollapsedPiece(Piece.INDEX_GAUCHE,null);
                 tmp.setCollapsedPiece(Piece.INDEX_DROITE,this.pieces.get(1));
                 tmp.setCollapsedPiece(Piece.INDEX_BAS,this.pieces.get(nbColonnes));
-
                 continue;
             }
 
@@ -143,7 +142,6 @@ public class Puzzle {
                 tmp.setCollapsedPiece(Piece.INDEX_HAUT,null);
                 tmp.setCollapsedPiece(Piece.INDEX_DROITE,null);
                 tmp.setCollapsedPiece(Piece.INDEX_BAS,this.pieces.get(i+nbColonnes));
-
                 continue;
             }
 
@@ -154,7 +152,6 @@ public class Puzzle {
                 tmp.setCollapsedPiece(Piece.INDEX_BAS,null);
                 tmp.setCollapsedPiece(Piece.INDEX_DROITE,null);
                 tmp.setCollapsedPiece(Piece.INDEX_HAUT,this.pieces.get(i-nbColonnes));
-
                 continue;
             }
 
@@ -164,7 +161,7 @@ public class Puzzle {
                 tmp.setCollapsedPiece(Piece.INDEX_GAUCHE,null);
                 tmp.setCollapsedPiece(Piece.INDEX_HAUT,this.pieces.get(i-nbColonnes));
                 tmp.setCollapsedPiece(Piece.INDEX_DROITE,this.pieces.get(i+1));
-
+                Log.d("test 4 coins Bas Gauche","index -> "+i);
                 continue;
             }
 
@@ -175,7 +172,6 @@ public class Puzzle {
                 tmp.setCollapsedPiece(Piece.INDEX_GAUCHE,this.pieces.get(i-1));
                 tmp.setCollapsedPiece(Piece.INDEX_DROITE,this.pieces.get(i+1));
                 tmp.setCollapsedPiece(Piece.INDEX_BAS,this.pieces.get(i+nbColonnes));
-
                 continue;
             }
 
@@ -185,7 +181,6 @@ public class Puzzle {
                 tmp.setCollapsedPiece(Piece.INDEX_GAUCHE,this.pieces.get(i-1));
                 tmp.setCollapsedPiece(Piece.INDEX_DROITE,this.pieces.get(i+1));
                 tmp.setCollapsedPiece(Piece.INDEX_BAS,null);
-
                 continue;
             }
 
@@ -195,20 +190,17 @@ public class Puzzle {
                 tmp.setCollapsedPiece(Piece.INDEX_GAUCHE,null);
                 tmp.setCollapsedPiece(Piece.INDEX_DROITE,this.pieces.get(i+1));
                 tmp.setCollapsedPiece(Piece.INDEX_BAS,this.pieces.get(i+nbColonnes));
-
                 continue;
             }
 
             //Droite
-            if((i-nbColonnes-1)%nbColonnes == 0){
+            if(i%nbColonnes == nbColonnes-1){
                 tmp.setCollapsedPiece(Piece.INDEX_HAUT,this.pieces.get(i-nbColonnes));
                 tmp.setCollapsedPiece(Piece.INDEX_GAUCHE,this.pieces.get(i-1));
                 tmp.setCollapsedPiece(Piece.INDEX_DROITE,null);
                 tmp.setCollapsedPiece(Piece.INDEX_BAS,this.pieces.get(i+nbColonnes));
-
                 continue;
             }
-
         //Cases entièrement entourées
             tmp.setCollapsedPiece(Piece.INDEX_HAUT,this.pieces.get(i-nbColonnes));
             tmp.setCollapsedPiece(Piece.INDEX_GAUCHE,this.pieces.get(i-1));
@@ -280,8 +272,16 @@ public class Puzzle {
     }
 
     public void doCollapsions(){
+        int[] deplacements;
         for(Piece tmp:this.pieces_touched){
-            tmp.doCollapsion();
+            deplacements = tmp.doCollapsion();
+            if(deplacements[2] == 1){
+                for(Piece p: this.pieces_touched){
+                    p.setX(p.getX()+deplacements[0]);
+                    p.setY(p.getY()+deplacements[1]);
+                }
+                break;
+            }
         }
         this.testCollapsions();
     }

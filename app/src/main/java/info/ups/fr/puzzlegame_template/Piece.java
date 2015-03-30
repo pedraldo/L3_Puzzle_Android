@@ -77,14 +77,19 @@ public class Piece {
         this.tBool[pos] = state;
     }
 
-    public void doCollapsion(){
+    public int[] doCollapsion(){
+        int[] retour;
+        retour = new int[]{0, 0, 0};
         if(this.tPiece[INDEX_HAUT] != null && !this.tBool[INDEX_HAUT]){
             if(Math.abs(this.x - this.tPiece[INDEX_HAUT].getX()) <= 20 && Math.abs(this.y - (this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight())) <= 20){
                 this.tBool[INDEX_HAUT] = true;
                 this.tPiece[INDEX_HAUT].setCollapsion(INDEX_BAS,true);
-                this.x = this.tPiece[INDEX_HAUT].getX();
-                this.y = this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight();
-                return;
+                /*this.x = this.tPiece[INDEX_HAUT].getX();
+                this.y = this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight();*/
+                Log.d("test collapsions", "do HAUT");
+
+                retour = new int[]{this.tPiece[INDEX_HAUT].getX()-this.x,this.tPiece[INDEX_HAUT].getY()+this.bImage.getHeight()-this.y,1};
+                return retour;
             }
             else{
                 this.tBool[INDEX_HAUT] = false;
@@ -98,9 +103,11 @@ public class Piece {
             if(Math.abs(this.x - (this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth())) <= 20 && Math.abs(this.y - this.tPiece[INDEX_GAUCHE].getY()) <= 20){
                 this.tBool[INDEX_GAUCHE] = true;
                 this.tPiece[INDEX_GAUCHE].setCollapsion(INDEX_DROITE,true);
-                this.x = this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth();
-                this.y = this.tPiece[INDEX_GAUCHE].getY();
-                return;
+                /*this.x = this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth();
+                this.y = this.tPiece[INDEX_GAUCHE].getY();*/
+                Log.d("test collapsions", "do GAUCHE");
+                retour = new int[]{this.tPiece[INDEX_GAUCHE].getX()+this.bImage.getWidth()-this.x,this.tPiece[INDEX_GAUCHE].getY()-this.y,1};
+                return retour;
             }
             else{
                 this.tBool[INDEX_GAUCHE] = false;
@@ -115,9 +122,11 @@ public class Piece {
             if(Math.abs(this.x - this.tPiece[INDEX_BAS].getX()) <= 20 && Math.abs(this.y+this.bImage.getHeight() - this.tPiece[INDEX_BAS].getY()) <= 20){
                 this.tBool[INDEX_BAS] = true;
                 this.tPiece[INDEX_BAS].setCollapsion(INDEX_HAUT,true);
-                this.x = this.tPiece[INDEX_BAS].getX();
-                this.y = this.tPiece[INDEX_BAS].getY()-this.bImage.getHeight();
-                return;
+                /*this.x = this.tPiece[INDEX_BAS].getX();
+                this.y = this.tPiece[INDEX_BAS].getY()-this.bImage.getHeight();*/
+                Log.d("test collapsions", "do BAS");
+                retour = new int[]{this.tPiece[INDEX_BAS].getX()-this.x,this.tPiece[INDEX_BAS].getY()-this.bImage.getHeight()-this.y,1};
+                return retour;
             }
             else{
                 this.tBool[INDEX_BAS] = false;
@@ -129,11 +138,13 @@ public class Piece {
 
         if(this.tPiece[INDEX_DROITE] != null  && !this.tBool[INDEX_DROITE]){
             if(Math.abs(this.x - this.tPiece[INDEX_DROITE].getX() + this.bImage.getWidth()) <= 20 && Math.abs(this.y - this.tPiece[INDEX_DROITE].getY()) <= 20){
+                Log.d("test collapsions", "do DROITE && this.tPiece[INDEX_DROITE] = "+this.tPiece[INDEX_DROITE]);
                 this.tBool[INDEX_DROITE] = true;
                 this.tPiece[INDEX_DROITE].setCollapsion(INDEX_GAUCHE,true);
-                this.x = this.tPiece[INDEX_DROITE].getX()-this.bImage.getWidth();
-                this.y = this.tPiece[INDEX_DROITE].getY();
-                return;
+                /*this.x = this.tPiece[INDEX_DROITE].getX()-this.bImage.getWidth();
+                this.y = this.tPiece[INDEX_DROITE].getY();*/
+                retour = new int[]{this.tPiece[INDEX_DROITE].getX()-this.bImage.getWidth()-this.x,this.tPiece[INDEX_DROITE].getY()-this.y,1};
+                return retour;
             }
             else{
                 this.tBool[INDEX_DROITE] = false;
@@ -142,6 +153,7 @@ public class Piece {
         else{
             this.tBool[INDEX_DROITE] = true;
         }
+        return retour;
     }
 
     public void testCollapsions(){
@@ -149,6 +161,7 @@ public class Piece {
             if(Math.abs(this.x - this.getCollapsedPieces(INDEX_HAUT).getX()) == 0 && Math.abs(this.y - (this.getCollapsedPieces(INDEX_HAUT).getY()+this.bImage.getHeight())) == 0){
                 this.setCollapsion(INDEX_HAUT, true);
                 this.tPiece[INDEX_HAUT].setCollapsion(INDEX_BAS,true);
+                Log.d("test collapsions", "test HAUT");
             }
             else{
                 //this.setCollapsion(INDEX_HAUT, false);
@@ -162,6 +175,7 @@ public class Piece {
             if(Math.abs(this.x - (this.getCollapsedPieces(INDEX_GAUCHE).getX()+this.bImage.getWidth())) == 0 && Math.abs(this.y - this.getCollapsedPieces(INDEX_GAUCHE).getY()) == 0){
                 this.setCollapsion(INDEX_GAUCHE, true);
                 this.tPiece[INDEX_GAUCHE].setCollapsion(INDEX_DROITE,true);
+                Log.d("test collapsions", "test GAUCHE");
             }
             else{
                 //this.setCollapsion(INDEX_GAUCHE, false);
@@ -176,6 +190,7 @@ public class Piece {
             if(Math.abs(this.x - this.getCollapsedPieces(INDEX_BAS).getX()) == 0 && Math.abs(this.y+this.bImage.getHeight() - this.getCollapsedPieces(INDEX_BAS).getY()) == 0){
                 this.setCollapsion(INDEX_BAS, true);
                 this.tPiece[INDEX_BAS].setCollapsion(INDEX_HAUT,true);
+                Log.d("test collapsions", "test BAS");
             }
             else{
                 //this.setCollapsion(INDEX_BAS, false);
@@ -189,6 +204,7 @@ public class Piece {
             if(Math.abs(this.x - this.getCollapsedPieces(INDEX_DROITE).getX() + this.bImage.getWidth()) == 0 && Math.abs(this.y - this.getCollapsedPieces(INDEX_DROITE).getY()) == 0){
                 this.setCollapsion(INDEX_DROITE, true);
                 this.tPiece[INDEX_DROITE].setCollapsion(INDEX_GAUCHE,true);
+                Log.d("test collapsions", "test DROITE");
             }
             else{
                 //this.setCollapsion(INDEX_DROITE, false);
