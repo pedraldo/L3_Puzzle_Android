@@ -3,6 +3,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="100dp">
 
+    <ImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:id="@+id/imgGauche"
+        android:layout_centerVertical="true"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="10dp"/>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -11,5 +19,15 @@
         android:textColor="@color/white"
         android:textSize="35sp"
         android:id="@+id/text"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textTime"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="10dp"
+        android:textColor="@color/white"
+        android:textSize="25sp"/>
 
 </RelativeLayout>

@@ -15,6 +15,8 @@ import android.view.View;
 
 import java.util.List;
 
+import info.ups.fr.puzzlegame_template.BDD.BDDTools;
+
 
 /**
  * TODO: document your custom view class.
@@ -32,6 +34,9 @@ public class TwoPiecesPuzzle extends View {
     private int nbLignes;
     private int nbColonnes;
     private Bitmap img;
+    private int lvl;
+    private long startTime;
+    private long endTime;
     private int numPiece;
 
     private Drawable mExampleDrawable;
@@ -61,8 +66,10 @@ public class TwoPiecesPuzzle extends View {
         super(context, attrs, defStyle);
     }
 
-    public void setImage(int resImg, int nbLignes, int nbColonnes){
+    public void setImage(int lvl, int resImg, int nbLignes, int nbColonnes){
         if(!this.isSet){
+            this.startTime = System.currentTimeMillis();
+            this.lvl = lvl;
             this.nbLignes = nbLignes;
             this.nbColonnes = nbColonnes;
             this.img = BitmapFactory.decodeResource(getResources(), resImg);
@@ -129,7 +136,7 @@ public class TwoPiecesPuzzle extends View {
                             v.invalidate();
 
                             if(puzzle.isPuzzleCompleted()){
-                                launchDialogFinish();
+                                puzzleFinish();
                             }
                         }
                     break;
@@ -146,6 +153,21 @@ public class TwoPiecesPuzzle extends View {
             }
         }
         return true;
+    }
+
+    private void puzzleFinish(){
+        this.endTime = System.currentTimeMillis();
+        BDDTools bddHandler = new BDDTools(this.getContext());
+
+        if(bddHandler.getLevelOK(this.lvl)){
+            if(bddHandler.getLevelTime(this.lvl) > this.endTime-this.startTime)
+                bddHandler.setLevelTime(this.lvl, this.endTime-this.startTime);
+        }else{
+            bddHandler.setLevelOK(this.lvl, true);
+            bddHandler.setLevelTime(this.lvl, this.endTime-this.startTime);
+        }
+
+        this.launchDialogFinish();
     }
 
     private void launchDialogFinish(){
