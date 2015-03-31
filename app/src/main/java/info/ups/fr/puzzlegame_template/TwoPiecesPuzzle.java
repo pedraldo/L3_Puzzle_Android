@@ -43,9 +43,6 @@ public class TwoPiecesPuzzle extends View {
 
     private Puzzle puzzle;
 
-
-    Bitmap myPict1 = BitmapFactory.decodeResource(getResources(), R.drawable.fishpiece1);
-    Bitmap myPict2 = BitmapFactory.decodeResource(getResources(), R.drawable.fishpiece2);
 	
 	private int test;
 
@@ -85,18 +82,21 @@ public class TwoPiecesPuzzle extends View {
         this.isPieceTouched = false;
         this.puzzle = new Puzzle(this.img,this.nbLignes,this.nbColonnes,this.getWidth(),this.getHeight());
 
-        int x=0,y=0;
+        int x,y;
         List<Piece> ListPiece = this.puzzle.getListPiece();
         int largeur_piece = ListPiece.get(0).getBitmap().getWidth();
         int hauteur_piece = ListPiece.get(0).getBitmap().getHeight();
         int i;
 
+        x=(int) ((float) (this.getWidth() / 2) - ((float) ((float)nbColonnes / 2) * puzzle.getLargeurPieces()));
+        y=(int) ((float) (this.getHeight()/2) - ((float) ((float)nbLignes/2)*puzzle.getHauteurPieces()));
+
         for(i=0;i<ListPiece.size();i++){
             ListPiece.get(i).setX(x);
             ListPiece.get(i).setY(y);
             x += largeur_piece;
-            if(x + largeur_piece > this.getWidth()){
-                x=0;
+            if(x+largeur_piece > this.getWidth() || i+1%nbColonnes == 0){
+                x=(int) ((float) (this.getWidth() / 2) - ((float) ((float)nbColonnes / 2) * puzzle.getLargeurPieces()));
                 y+= hauteur_piece;
             }
         }
