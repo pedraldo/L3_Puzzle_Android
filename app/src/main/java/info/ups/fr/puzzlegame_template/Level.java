@@ -7,11 +7,14 @@ public class Level {
     private int location;
     private int lvl;
     private Difficulte difficulte;
+    private long time;
+    private boolean ok;
 
     public Level(int location, int lvl, Difficulte difficulte){
         this.location = location;
         this.lvl = lvl;
         this.difficulte = difficulte;
+        this.ok = false;
     }
 
     public String toString(){
@@ -63,7 +66,27 @@ public class Level {
         return R.color.colorFacile;
     }
 
+    public int getLevel(){
+        return this.lvl;
+    }
+
     public int getLocation(){
         return this.location;
+    }
+
+    public void setOk(boolean ok){
+        this.ok = ok;
+    }
+
+    public void setTime(long time){
+        this.time = time;
+    }
+
+    public boolean isOk(){
+        return this.ok;
+    }
+
+    public long getTime(){
+        return this.time;
     }
 }

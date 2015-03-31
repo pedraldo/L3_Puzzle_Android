@@ -4,6 +4,9 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 
+/**
+ * Created by Arnaud on 31/03/2015.
+ */
 public class BDDTools extends DAODataBase {
 
     public BDDTools(Context context){
@@ -27,7 +30,7 @@ public class BDDTools extends DAODataBase {
         this.close();
     }
 
-    public void setLevelTime(int lvl, float time){
+    public void setLevelTime(int lvl, long time){
         this.open();
 
         ContentValues value = new ContentValues();
@@ -52,14 +55,14 @@ public class BDDTools extends DAODataBase {
         return value == 1;
     }
 
-    public float getLevelTime(int lvl){
+    public long getLevelTime(int lvl){
         this.open();
 
         Cursor c = mDb.rawQuery("select "+DataBaseHandler.PUZZLE_TIME+" from "+DataBaseHandler.PUZZLE_TABLE_NAME+
                                 " where "+DataBaseHandler.PUZZLE_LEVEL+" = ?;", new String[]{String.valueOf(lvl)});
 
         c.moveToFirst();
-        float value = c.getFloat(0);
+        long value = c.getLong(0);
         c.close();
         this.close();
 

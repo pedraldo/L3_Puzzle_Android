@@ -4,6 +4,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Created by Arnaud on 31/03/2015.
+ */
 public class DataBaseHandler extends SQLiteOpenHelper {
 
     public static final String PUZZLE_TABLE_NAME = "PUZZLE";
@@ -34,7 +37,7 @@ public class DataBaseHandler extends SQLiteOpenHelper {
         this.insertLevel(db);
     }
 
-    private void insertLevel(SQLiteDatabase db){
+    public static void insertLevel(SQLiteDatabase db){
         String query;
 
         for(int i = 1; i < 13; i++){
