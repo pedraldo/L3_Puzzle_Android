@@ -24,7 +24,7 @@ public class Puzzle {
         int[] dimensions = new int[2];
         bImage = redimensionnerImage(bImage,largeurVue,hauteurVue);
 
-        dimensions = decouperImage(bImage,nbLignes,nbColonnes);
+        dimensions = decouperImage(bImage,nbLignes,nbColonnes, hauteurVue);
         this.largeur_pieces = dimensions[0];
         this.hauteur_pieces = dimensions[1];
 
@@ -51,7 +51,7 @@ public class Puzzle {
     }
 
 
-    private int[] decouperImage(Bitmap b, int nbLignes, int nbColonnes){
+    private int[] decouperImage(Bitmap b, int nbLignes, int nbColonnes, int hauteurVue){
         int largeur = b.getWidth();
         int hauteur = b.getHeight();
         int largeur_piece = largeur/nbColonnes;
@@ -60,9 +60,15 @@ public class Puzzle {
         this.pieces = new ArrayList<Piece>();
 
         int i,j;
+        Piece p;
+        final int const_deplacement_hauteur = (hauteurVue/2 - (nbLignes/2)*hauteur_piece);
         for(i=0; i<nbLignes;i++){
             for(j=0;j<nbColonnes;j++){
-                this.pieces.add(new Piece(Bitmap.createBitmap(b, j * largeur_piece, i * hauteur_piece, largeur_piece, hauteur_piece),j*largeur_piece,i*hauteur_piece));
+                int placement_y_piece = i*hauteur_piece + const_deplacement_hauteur;
+                p = new Piece(Bitmap.createBitmap(b, j * largeur_piece, i*hauteur_piece, largeur_piece, hauteur_piece),j*largeur_piece,placement_y_piece);
+                p.setX(j*largeur_piece);
+                p.setY(placement_y_piece);
+                this.pieces.add(p);
             }
         }
 
@@ -308,5 +314,5 @@ public class Puzzle {
         }
         return true;
     }
-    
+
 }

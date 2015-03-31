@@ -8,9 +8,9 @@
     <view
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
         class="info.ups.fr.puzzlegame_template.TwoPiecesPuzzle"
         android:id="@+id/view"
-        android:layout_alignParentStart="true"
         android:layout_marginTop="0dp" />
 
 </RelativeLayout>
