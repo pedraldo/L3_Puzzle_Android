@@ -24,7 +24,7 @@ public class PuzzleActivity extends ActionBarActivity {
         this.imgRes = getIntent().getIntExtra("imgRes",R.drawable.niveau1);
 
         TwoPiecesPuzzle puzzleView = (TwoPiecesPuzzle)this.findViewById(R.id.view);
-        puzzleView.setImage(this.imgRes, getIntent().getIntExtra("nbLignes", 2), getIntent().getIntExtra("nbColonnes",2));
+        puzzleView.setImage(getIntent().getIntExtra("lvl", 1), this.imgRes, getIntent().getIntExtra("nbLignes", 2), getIntent().getIntExtra("nbColonnes",2));
 
         Button bDisplayImage = (Button)this.findViewById(R.id.buttonDisplayImage);
         bDisplayImage.setOnClickListener(new View.OnClickListener() {
@@ -53,7 +53,7 @@ public class PuzzleActivity extends ActionBarActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_puzzle, menu);
         return true;
     }
 

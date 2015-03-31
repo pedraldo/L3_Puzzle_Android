@@ -12,6 +12,8 @@ import android.widget.ListView;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.ups.fr.puzzlegame_template.BDD.BDDTools;
+
 
 public class MainActivity extends ActionBarActivity {
 
@@ -40,6 +42,12 @@ public class MainActivity extends ActionBarActivity {
         this.listLevel.add(new Level(R.drawable.niveau10,10,Difficulte.EXPERT));
         this.listLevel.add(new Level(R.drawable.niveau11,11,Difficulte.EXPERT));
         this.listLevel.add(new Level(R.drawable.niveau12,12,Difficulte.EXPERT));
+
+        BDDTools bddHandler = new BDDTools(this);
+        for(int i = 0; i < 12; i++){
+            this.listLevel.get(i).setOk(bddHandler.getLevelOK(i+1));
+            this.listLevel.get(i).setTime(bddHandler.getLevelTime(i + 1));
+        }
     }
 
     private void initListView(){
@@ -54,11 +62,14 @@ public class MainActivity extends ActionBarActivity {
         this.listviewLevel.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent = new Intent(getBaseContext(), PuzzleActivity.class);
-                intent.putExtra("imgRes", listLevel.get(position).getLocation());
-                intent.putExtra("nbLignes", listLevel.get(position).nbLignes());
-                intent.putExtra("nbColonnes", listLevel.get(position).nbColonnes());
-                startActivity(intent);
+                if(position == 0 || listLevel.get(position-1).isOk()){
+                    Intent intent = new Intent(getBaseContext(), PuzzleActivity.class);
+                    intent.putExtra("lvl", listLevel.get(position).getLevel());
+                    intent.putExtra("imgRes", listLevel.get(position).getLocation());
+                    intent.putExtra("nbLignes", listLevel.get(position).nbLignes());
+                    intent.putExtra("nbColonnes", listLevel.get(position).nbColonnes());
+                    startActivity(intent);
+                }
             }
         });
     }
@@ -78,8 +89,11 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        if (id == R.id.action_reinit) {
+            BDDTools bddHandler = new BDDTools(this);
+            bddHandler.reinit();
+            this.initLevel();
+            this.initListView();
         }
 
         return super.onOptionsItemSelected(item);
