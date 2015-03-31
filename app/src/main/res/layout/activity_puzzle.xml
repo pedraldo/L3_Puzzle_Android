@@ -21,11 +21,7 @@
         android:layout_centerVertical="true"
         class="info.ups.fr.puzzlegame_template.TwoPiecesPuzzle"
         android:id="@+id/view"
-<<<<<<< HEAD
-        android:layout_marginTop="0dp" />
-=======
+        android:layout_marginTop="0dp"
         android:layout_above="@+id/buttonDisplayImage"/>
-
->>>>>>> master
 
 </RelativeLayout>
